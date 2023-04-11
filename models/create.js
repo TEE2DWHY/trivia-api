@@ -7,13 +7,16 @@ const userSchema = new mongoose.Schema({
         trim: true,
         maxLength: [20, "name cannot be more than 20 characters"]
     },
-    // gender:{
-    //     type: String,
-    //     required: [true, "specify gender"]
-    // },
-    user:{
+    boy:{
         type: Boolean,
-        default: true
+        default: false
+    },
+    girl:{
+        type: Boolean,
+        default: false
+    },
+    choice:{
+        type: [String]
     }
 })
 
