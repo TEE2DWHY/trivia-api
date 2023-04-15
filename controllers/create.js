@@ -1,75 +1,76 @@
 const create = require("../models/create");
 
 // get all users
-const getAllUsers = async (req, res) =>{
-  try{
+const getAllUsers = async (req, res) => {
+  try {
     const allUsers = await create.find();
-    res.status(200).json({allUsers});
-  }
-  catch(err){
-    res.status(500).json({meg: err})
+    res.status(200).json({ allUsers });
+  } catch (err) {
+    res.status(500).json({ meg: err });
   }
 };
 
-// create a new user 
-const newUser = async (req, res) =>{
-  try{
+// create a new user
+const newUser = async (req, res) => {
+  try {
     const user = await create.create(req.body);
-    res.status(201).json({user})
-  }
-  catch (err){
-    res.status(500).json({msg: err})
+    res.status(201).json({ user });
+  } catch (err) {
+    res.status(500).json({ msg: err });
   }
 };
 
 // get specific user
-const getUser = async (req, res) =>{
-  try{
-    const user = await create.findOne({_id: req.params.id})
-    if(!user){
-     return res.status(404).json({msg : `No user with id: ${req.params.id} exist in database`})
+const getUser = async (req, res) => {
+  try {
+    const user = await create.findOne({ _id: req.params.id });
+    if (!user) {
+      return res
+        .status(404)
+        .json({ msg: `No user with id: ${req.params.id} exist in database` });
     }
-    res.status(200).json({user})
+    res.status(200).json({ user });
+  } catch (err) {
+    res.status(500).json({ msg: err });
   }
-  catch(err){
-    res.status(500).json({msg: err})
-  }
-}
+};
 
 // delete specific task
-const deleteUser = async (req, res) =>{
-  const {id} = req.params
-  try{
-    const users = await create.findOneAndDelete({_id: id});
-    if (!users){
-      return res.status(404).json({msg : `No user with id: ${id} exist in database`})
+const deleteUser = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const users = await create.findOneAndDelete({ _id: id });
+    if (!users) {
+      return res
+        .status(404)
+        .json({ msg: `No user with id: ${id} exist in database` });
     }
-    res.status(200).json({msg:`user with id : ${id} has been deleted`})
+    res.status(200).json({ msg: `user with id : ${id} has been deleted` });
+  } catch (err) {
+    res.status(500).json({ msg: err });
   }
-  catch(err){
-    res.status(500).json({msg: err})
+};
+const update = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const updatedUser = await create.findOneAndUpdate({ _id: id }, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (!updatedUser) {
+      return res
+        .status(404)
+        .json({ msg: `user with id: ${id} does not exist in database` });
+    }
+    res.status(201).json({ msg: "user update is successful", updatedUser });
+  } catch (err) {
+    res.status(500).json({ msg: err });
   }
-}
-const update = async (req, res) =>{
-    const {id} = req.params
-    try{
-        const updatedUser = await create.findOneAndUpdate({_id: id}, req.body, {
-          new: true,
-          runValidators: true
-        })
-        if (!updatedUser){
-          return res.status(404).json({msg: `user with id: ${id} does not exist in database`})
-        }
-        res.status(201).json({updatedUser})
-    }
-    catch(err){
-        res.status(500).json({msg: err})
-    }
-}
+};
 module.exports = {
-    newUser,
-    getAllUsers,
-    getUser,
-    deleteUser,
-    update
-}
+  newUser,
+  getAllUsers,
+  getUser,
+  deleteUser,
+  update,
+};
