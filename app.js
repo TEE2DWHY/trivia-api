@@ -4,6 +4,7 @@ const connectDb = require("./db/connect");
 const dotenv = require("dotenv").config();
 const create = require("./routes/create");
 const cors = require("cors");
+// enable cors
 app.use(cors());
 // middleWears
 app.use(express.json());
