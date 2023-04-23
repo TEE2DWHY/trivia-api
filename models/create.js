@@ -1,5 +1,12 @@
 const mongoose = require("mongoose");
 
+// users schema
+const friendsSchema = new mongoose.Schema({
+  friend: String,
+  score: String,
+});
+
+// creator's schema
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -18,6 +25,7 @@ const userSchema = new mongoose.Schema({
   choice: {
     type: [String],
   },
+  friends: friendsSchema,
 });
 
 module.exports = mongoose.model("User", userSchema);

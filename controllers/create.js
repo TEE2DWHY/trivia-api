@@ -20,6 +20,25 @@ const newUser = async (req, res) => {
   }
 };
 
+// find a user id and populate friends
+const updateFriends = async (req, res) => {
+  try {
+    const createFriend = await create.findByIdAndUpdate(
+      { _id: req.params.id },
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+    res
+      .status(201)
+      .json({ msg: `user results successfully updated`, friend: createFriend });
+  } catch (err) {
+    res.status(500).json({ error: err });
+  }
+};
+
 // get specific user
 const getUser = async (req, res) => {
   try {
@@ -73,4 +92,5 @@ module.exports = {
   getUser,
   deleteUser,
   update,
+  updateFriends,
 };
