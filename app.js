@@ -1,15 +1,18 @@
 const express = require("express");
 const app = express();
 const connectDb = require("./db/connect");
-const dotenv = require("dotenv").config();
+require("dotenv").config();
 const create = require("./routes/create");
 const cors = require("cors");
+const notFound = require("./middlewear/notFound");
 // enabled cors
 app.use(cors());
 // middleWears
 app.use(express.json());
 // routes
 app.use("/api/v1", create);
+// not found
+app.use(notFound);
 
 const port = process.env.PORT || 8000;
 

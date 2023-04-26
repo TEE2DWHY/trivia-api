@@ -4,7 +4,7 @@ const create = require("../models/create");
 const getAllUsers = async (req, res) => {
   try {
     const allUsers = await create.find();
-    res.status(200).json({ allUsers });
+    res.status(200).json({ allUser });
   } catch (err) {
     res.status(500).json({ meg: err });
   }
