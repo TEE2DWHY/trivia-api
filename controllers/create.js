@@ -4,7 +4,7 @@ const create = require("../models/create");
 const getAllUsers = async (req, res) => {
   try {
     const allUsers = await create.find();
-    res.status(200).json({ allUser });
+    res.status(200).json({ allUsers });
   } catch (err) {
     res.status(500).json({ meg: err });
   }
@@ -23,17 +23,18 @@ const newUser = async (req, res) => {
 // find a user id and populate friends
 const updateFriends = async (req, res) => {
   try {
-    const createFriend = await create.findByIdAndUpdate(
-      { _id: req.params.id },
-      req.body,
-      {
-        new: true,
-        runValidators: true,
-      }
-    );
+    const createFriend = await create.findById({ _id: req.params.id });
+    //console.log(createFriend);
+
+    createFriend.friends.push({
+      friend: req.body.friend,
+      score: req.body.score,
+    });
+
+    createFriend.save();
     res
       .status(201)
-      .json({ msg: `user results successfully updated`, friend: createFriend });
+      .json({ msg: "user results successfully updated", friend: createFriend });
   } catch (err) {
     res.status(500).json({ error: err });
   }

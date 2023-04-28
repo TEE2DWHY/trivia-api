@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
   choice: {
     type: [String],
   },
-  friends: friendsSchema,
+  friends: [friendsSchema],
 });
 
 module.exports = mongoose.model("User", userSchema);
