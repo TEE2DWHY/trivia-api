@@ -1,92 +1,69 @@
 const create = require("../models/create");
+const asyncWrapper = require("../middle-wear/async");
 
 // get all users
-const getAllUsers = async (req, res) => {
-  try {
-    const allUsers = await create.find();
-    res.status(200).json({ allUsers });
-  } catch (err) {
-    res.status(500).json({ meg: err });
-  }
-};
+const getAllUsers = asyncWrapper(async (req, res) => {
+  const allUsers = await create.find();
+  res.status(200).json({ allUsers });
+});
 
 // create a new user
-const newUser = async (req, res) => {
-  try {
-    const user = await create.create(req.body);
-    res.status(201).json({ user });
-  } catch (err) {
-    res.status(500).json({ msg: err });
-  }
-};
+const newUser = asyncWrapper(async (req, res) => {
+  const user = await create.create(req.body);
+  res.status(201).json({ user });
+});
 
-// find a user id and populate friends
-const updateFriends = async (req, res) => {
-  try {
-    const createFriend = await create.findById({ _id: req.params.id });
-    //console.log(createFriend);
+// find a user id and populate with friends
+const updateFriends = asyncWrapper(async (req, res) => {
+  const user = await create.findById({ _id: req.params.id });
+  user.friends.push({
+    friend: req.body.friend,
+    score: req.body.score,
+  });
 
-    createFriend.friends.push({
-      friend: req.body.friend,
-      score: req.body.score,
-    });
-
-    createFriend.save();
-    res
-      .status(201)
-      .json({ msg: "user results successfully updated", friend: createFriend });
-  } catch (err) {
-    res.status(500).json({ error: err });
-  }
-};
+  user.save();
+  res
+    .status(201)
+    .json({ msg: "user friends list is successfully updated", user });
+});
 
 // get specific user
-const getUser = async (req, res) => {
-  try {
-    const user = await create.findOne({ _id: req.params.id });
-    if (!user) {
-      return res
-        .status(404)
-        .json({ msg: `No user with id: ${req.params.id} exist in database` });
-    }
-    res.status(200).json({ user });
-  } catch (err) {
-    res.status(500).json({ msg: err });
+const getUser = asyncWrapper(async (req, res) => {
+  const user = await create.findOne({ _id: req.params.id });
+  if (!user) {
+    return res
+      .status(404)
+      .json({ msg: `No user with id: ${req.params.id} exist in database` });
   }
-};
+  res.status(200).json({ user });
+});
 
-// delete specific task
-const deleteUser = async (req, res) => {
+// delete specific user
+const deleteUser = asyncWrapper(async (req, res) => {
   const { id } = req.params;
-  try {
-    const users = await create.findOneAndDelete({ _id: id });
-    if (!users) {
-      return res
-        .status(404)
-        .json({ msg: `No user with id: ${id} exist in database` });
-    }
-    res.status(200).json({ msg: `user with id : ${id} has been deleted` });
-  } catch (err) {
-    res.status(500).json({ msg: err });
+  const users = await create.findOneAndDelete({ _id: id });
+  if (!users) {
+    return res
+      .status(404)
+      .json({ msg: `No user with id: ${id} exist in database` });
   }
-};
-const update = async (req, res) => {
+  res.status(200).json({ msg: `user with id : ${id} has been deleted` });
+});
+
+// update creator's data
+const update = asyncWrapper(async (req, res) => {
   const { id } = req.params;
-  try {
-    const updatedUser = await create.findOneAndUpdate({ _id: id }, req.body, {
-      new: true,
-      runValidators: true,
-    });
-    if (!updatedUser) {
-      return res
-        .status(404)
-        .json({ msg: `user with id: ${id} does not exist in database` });
-    }
-    res.status(201).json({ msg: "user update is successful", updatedUser });
-  } catch (err) {
-    res.status(500).json({ msg: err });
+  const updatedUser = await create.findOneAndUpdate({ _id: id }, req.body, {
+    new: true,
+    runValidators: true,
+  });
+  if (!updatedUser) {
+    return res
+      .status(404)
+      .json({ msg: `user with id: ${id} does not exist in database` });
   }
-};
+  res.status(201).json({ msg: "user update is successful", updatedUser });
+});
 module.exports = {
   newUser,
   getAllUsers,
