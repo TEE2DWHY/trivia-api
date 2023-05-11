@@ -6,11 +6,13 @@ const {
   deleteUser,
   update,
   updateFriends,
-} = require("../controllers/create");
+  // deleteAllUser,
+} = require("../controllers/users");
 
 router.get("/", getAllUsers);
 router.post("/create", newUser);
 router
+  // .delete("/", deleteAllUser)
   .route("/:id")
   .get(getUser)
   .post(updateFriends)

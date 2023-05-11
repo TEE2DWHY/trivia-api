@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const connectDb = require("./db/connect");
 require("dotenv").config();
-const create = require("./routes/create");
+const create = require("./routes/users");
 const cors = require("cors");
 const notFound = require("./middle-wear/notFound");
 const errorHandler = require("./middle-wear/error-handler");
