@@ -3,7 +3,7 @@ const asyncWrapper = require("../middle-wear/async");
 
 // get all users
 const getAllUsers = asyncWrapper(async (req, res) => {
-  const allUsers = await create.find();
+  const allUsers = await users.find();
   res.status(200).json({ allUsers });
 });
 
